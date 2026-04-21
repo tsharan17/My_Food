@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NutriGuard – Food & Health Smart Assistant</title>
+  <meta name="description" content="AI-powered food tracking and health assistant. Log meals, track nutrition, and get smart recommendations based on your health condition." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════
+     HEADER
+════════════════════════════════════════════════ -->
+<header class="app-header">
+  <div class="header-inner">
+    <div class="logo">
+      <span class="logo-icon">🥗</span>
+      <div>
+        <span class="logo-title">NutriGuard</span>
+        <span class="logo-sub">Food & Health Smart Assistant</span>
+      </div>
+    </div>
+    <div class="header-date" id="headerDate"></div>
+  </div>
+</header>
+
+<!-- ════════════════════════════════════════════════
+     MAIN LAYOUT
+════════════════════════════════════════════════ -->
+<main class="app-main">
+
+  <!-- ── LEFT COLUMN ─────────────────────────── -->
+  <aside class="left-col">
+
+    <!-- Health Condition Panel -->
+    <section class="card condition-card">
+      <h2 class="card-title">⚕️ My Health Condition</h2>
+      <p class="card-hint">Select your goal — recommendations will adapt.</p>
+      <div class="condition-grid" id="conditionGrid">
+        <button class="cond-btn" data-cond="general"      id="cond-general">🌿 General Health</button>
+        <button class="cond-btn" data-cond="weight_loss"  id="cond-weight_loss">⚖️ Weight Loss</button>
+        <button class="cond-btn" data-cond="diabetes"     id="cond-diabetes">💉 Diabetes</button>
+        <button class="cond-btn" data-cond="high_bp"      id="cond-high_bp">❤️ High BP</button>
+      </div>
+      <div class="active-condition" id="activeConditionBadge">
+        <span class="badge badge-green" id="conditionBadgeText">🌿 General Health</span>
+      </div>
+    </section>
+
+    <!-- Daily Summary Card -->
+    <section class="card daily-card">
+      <div class="card-title-row">
+        <h2 class="card-title">📊 Today's Nutrition</h2>
+        <span class="date-label" id="todayLabel"></span>
+      </div>
+
+      <!-- Calories hero -->
+      <div class="cal-hero">
+        <div class="cal-circle" id="calCircle">
+          <span class="cal-num" id="calNum">0</span>
+          <span class="cal-unit">kcal</span>
+        </div>
+        <div class="cal-meta">
+          <div class="cal-target" id="calTarget">Target: 2200 kcal</div>
+          <div class="cal-entries" id="calEntries">0 items logged</div>
+        </div>
+      </div>
+
+      <!-- Nutrient bars -->
+      <div class="nutrient-bars">
+        <div class="nutrient-row">
+          <label>Protein</label>
+          <div class="bar-track"><div class="bar-fill bar-protein" id="barProtein"></div></div>
+          <span class="nutrient-val" id="valProtein">0g</span>
+        </div>
+        <div class="nutrient-row">
+          <label>Carbs</label>
+          <div class="bar-track"><div class="bar-fill bar-carbs" id="barCarbs"></div></div>
+          <span class="nutrient-val" id="valCarbs">0g</span>
+        </div>
+        <div class="nutrient-row">
+          <label>Fats</label>
+          <div class="bar-track"><div class="bar-fill bar-fats" id="barFats"></div></div>
+          <span class="nutrient-val" id="valFats">0g</span>
+        </div>
+        <div class="nutrient-row">
+          <label>Fiber</label>
+          <div class="bar-track"><div class="bar-fill bar-fiber" id="barFiber"></div></div>
+          <span class="nutrient-val" id="valFiber">0g</span>
+        </div>
+        <div class="nutrient-row">
+          <label>Sugar</label>
+          <div class="bar-track"><div class="bar-fill bar-sugar" id="barSugar"></div></div>
+          <span class="nutrient-val" id="valSugar">0g</span>
+        </div>
+      </div>
+
+      <!-- Daily health score -->
+      <div class="daily-score-row" id="dailyScoreRow" style="display:none;">
+        <span class="ds-label">Daily Health Score</span>
+        <div class="ds-badge" id="dailyScoreBadge">—</div>
+      </div>
+
+      <button class="btn-ghost btn-clear" id="btnClearToday">🗑 Clear Today's Log</button>
+    </section>
+
+    <!-- Weekly Summary -->
+    <section class="card weekly-card">
+      <h2 class="card-title">📅 This Week</h2>
+      <div class="week-bars" id="weekBars">
+        <div class="week-loading">Loading week data…</div>
+      </div>
+      <div class="week-insight" id="weekInsight"></div>
+    </section>
+
+  </aside>
+
+  <!-- ── CENTER COLUMN ──────────────────────── -->
+  <section class="center-col">
+
+    <!-- Food Input Card -->
+    <section class="card input-card">
+      <h2 class="card-title">🍽 What are you eating?</h2>
+
+      <div class="input-group">
+        <div class="food-input-wrap">
+          <span class="input-icon">🔍</span>
+          <input type="text" id="foodInput" class="food-input"
+            placeholder="e.g. 2 bowls of rice, 1 egg, banana…"
+            autocomplete="off" />
+          <div class="autocomplete-list" id="autocompleteList"></div>
+        </div>
+
+        <div class="portion-row">
+          <label for="portionInput">Portion ×</label>
+          <input type="number" id="portionInput" class="portion-input" value="1" min="0.25" max="10" step="0.25" />
+          <select id="mealType" class="meal-select">
+            <option value="breakfast">🌅 Breakfast</option>
+            <option value="lunch" selected>☀️ Lunch</option>
+            <option value="snack">🍎 Snack</option>
+            <option value="dinner">🌙 Dinner</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Two-action buttons -->
+      <div class="action-btns">
+        <button class="btn btn-before" id="btnBefore">
+          <span class="btn-icon">🤔</span>
+          <div>
+            <strong>I will eat this</strong>
+            <small>Analyse before eating</small>
+          </div>
+        </button>
+        <button class="btn btn-after" id="btnAfter">
+          <span class="btn-icon">✅</span>
+          <div>
+            <strong>I have eaten this</strong>
+            <small>Log & track now</small>
+          </div>
+        </button>
+      </div>
+
+      <!-- Spinner -->
+      <div class="spinner" id="spinner" style="display:none;">
+        <div class="spin-ring"></div><span>Analysing…</span>
+      </div>
+    </section>
+
+    <!-- Result Panel (populated by JS) -->
+    <div id="resultPanel" style="display:none;">
+
+      <!-- Warning banner -->
+      <div class="warning-banner" id="warningBanner" style="display:none;"></div>
+
+      <!-- Result card -->
+      <section class="card result-card">
+        <div class="result-header">
+          <div class="result-food-name" id="resultFoodName"></div>
+          <div class="result-mode-badge" id="resultModeBadge"></div>
+        </div>
+
+        <!-- Health score circle -->
+        <div class="score-section">
+          <div class="score-circle" id="scoreCircle">
+            <span class="score-num" id="scoreNum">—</span>
+            <span class="score-denom">/10</span>
+          </div>
+          <div class="score-meta">
+            <div class="score-label" id="scoreLabel"></div>
+            <div class="score-summary" id="scoreSummary"></div>
+          </div>
+        </div>
+
+        <!-- Nutrition chips -->
+        <div class="nutrition-chips" id="nutritionChips"></div>
+
+        <!-- Warnings -->
+        <div class="result-warnings" id="resultWarnings" style="display:none;">
+          <h3 class="section-heading">⚠️ Warnings</h3>
+          <ul class="flag-list" id="warningList"></ul>
+        </div>
+
+        <!-- Positives -->
+        <div class="result-positives" id="resultPositives" style="display:none;">
+          <h3 class="section-heading">💚 Why it's good</h3>
+          <ul class="flag-list flag-green" id="positiveList"></ul>
+        </div>
+
+        <!-- Suggestions -->
+        <div class="result-suggestions" id="resultSuggestions" style="display:none;">
+          <h3 class="section-heading">💡 Suggestions</h3>
+          <ul class="flag-list flag-yellow" id="suggestionList"></ul>
+        </div>
+
+        <!-- Alternatives -->
+        <div class="result-alternatives" id="resultAlternatives" style="display:none;">
+          <h3 class="section-heading">🔄 Healthier Alternatives</h3>
+          <ul class="flag-list flag-blue" id="alternativeList"></ul>
+        </div>
+
+        <!-- Tips -->
+        <div class="result-tips" id="resultTips" style="display:none;">
+          <h3 class="section-heading">📌 Health Tips</h3>
+          <ul class="flag-list flag-purple" id="tipList"></ul>
+        </div>
+      </section>
+    </div>
+
+    <!-- Today's food log -->
+    <section class="card log-card" id="logCard" style="display:none;">
+      <div class="card-title-row">
+        <h2 class="card-title">📋 Today's Food Log</h2>
+        <span class="log-count" id="logCount"></span>
+      </div>
+      <div class="log-list" id="logList"></div>
+    </section>
+
+  </section>
+
+</main>
+
+<!-- ════════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════ -->
+<footer class="app-footer">
+  <p>NutriGuard · Food & Health Smart Assistant · Built with ❤️ using AI Agents in Google Antigravity IDE</p>
+</footer>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
