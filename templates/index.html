@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Food – Smart Health Assistant</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
+
 <body>
 
   <nav class="navbar">
@@ -20,10 +23,10 @@
 
   <main class="container">
     <div class="dashboard-grid">
-      
+
       <!-- Left: Inputs & Logs -->
       <div class="grid-left">
-        
+
         <!-- Health Condition -->
         <section class="card primary-border">
           <h3><i class="fa-solid fa-user-doctor"></i> Health Focus</h3>
@@ -64,13 +67,14 @@
         <section class="card" id="logCard" style="display:none;">
           <h3><i class="fa-solid fa-list-check"></i> Today's History</h3>
           <div id="logList"></div>
-          <button id="btnClearToday" class="btn mt-2" style="background:#eee; font-size:0.8rem; width:100%;">Clear Today</button>
+          <button id="btnClearToday" class="btn mt-2" style="background:#eee; font-size:0.8rem; width:100%;">Clear
+            Today</button>
         </section>
       </div>
 
       <!-- Right: Monitor & Results -->
       <div class="grid-right">
-        
+
         <!-- Result Panel -->
         <section id="resultPanel" class="card primary-border hidden">
           <div class="result-header">
@@ -83,12 +87,13 @@
               <span id="resultModeBadge" class="result-badge">Analysis</span>
             </div>
           </div>
-          
+
           <div id="resultContent">
             <ul id="warningList" class="result-list"></ul>
             <ul id="positiveList" class="result-list"></ul>
             <div id="resultTips" class="mt-2">
-              <h5 style="color:var(--primary); font-size:0.9rem;"><i class="fa-solid fa-lightbulb"></i> Smart Recommendation</h5>
+              <h5 style="color:var(--primary); font-size:0.9rem;"><i class="fa-solid fa-lightbulb"></i> Smart
+                Recommendation</h5>
               <ul id="tipList" class="result-list"></ul>
             </div>
           </div>
@@ -100,14 +105,16 @@
             <h3><i class="fa-solid fa-chart-simple"></i> Nutrition Monitor</h3>
             <span id="calEntries" style="font-size:0.8rem; font-weight:600; color:#666;">0 items logged</span>
           </div>
-          
+
           <div class="nutrient-grid">
             <div class="nutrient-item">
               <div class="n-info">
                 <span>Calories</span>
                 <span><span id="calNum">0</span> / <span id="calTarget">2000</span> kcal</span>
               </div>
-              <div class="progress-bg"><div id="calCircle" class="progress-bar"></div></div>
+              <div class="progress-bg">
+                <div id="calCircle" class="progress-bar"></div>
+              </div>
             </div>
 
             <div class="nutrient-item">
@@ -115,7 +122,9 @@
                 <span>Protein</span>
                 <span id="valProtein">0g</span>
               </div>
-              <div class="progress-bg"><div id="barProtein" class="progress-bar green"></div></div>
+              <div class="progress-bg">
+                <div id="barProtein" class="progress-bar green"></div>
+              </div>
             </div>
 
             <div class="nutrient-item">
@@ -123,7 +132,9 @@
                 <span>Carbs</span>
                 <span id="valCarbs">0g</span>
               </div>
-              <div class="progress-bg"><div id="barCarbs" class="progress-bar yellow"></div></div>
+              <div class="progress-bg">
+                <div id="barCarbs" class="progress-bar yellow"></div>
+              </div>
             </div>
 
             <div class="nutrient-item">
@@ -131,7 +142,9 @@
                 <span>Fats</span>
                 <span id="valFats">0g</span>
               </div>
-              <div class="progress-bg"><div id="barFats" class="progress-bar"></div></div>
+              <div class="progress-bg">
+                <div id="barFats" class="progress-bar"></div>
+              </div>
             </div>
           </div>
         </section>
@@ -155,4 +168,5 @@
 
   <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
+
 </html>

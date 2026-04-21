@@ -6,22 +6,22 @@
 "use strict";
 
 const CONDITION_TARGETS = {
-  general:     { calories: 2200, protein: 150, carbs: 325, fats: 78, label: "General Health" },
+  general: { calories: 2200, protein: 150, carbs: 325, fats: 78, label: "General Health" },
   weight_loss: { calories: 1600, protein: 120, carbs: 180, fats: 55, label: "Weight Loss" },
-  diabetes:    { calories: 2000, protein: 120, carbs: 195, fats: 70, label: "Diabetes" },
-  high_bp:     { calories: 2000, protein: 120, carbs: 300, fats: 55, label: "High BP" },
+  diabetes: { calories: 2000, protein: 120, carbs: 195, fats: 70, label: "Diabetes" },
+  high_bp: { calories: 2000, protein: 120, carbs: 300, fats: 55, label: "High BP" },
 };
 
 const FOOD_SUGGESTIONS = [
-  "rice","roti","bread","egg","chicken","fish","dal","sambar","paneer","rajma","chickpeas",
-  "milk","curd","apple","banana","orange","mango","grapes","watermelon","salad","spinach",
-  "broccoli","carrot","tomato","potato","pizza","burger","fries","samosa","biscuit","chocolate",
-  "coffee","tea","green tea","juice","soda","water"
+  "rice", "roti", "bread", "egg", "chicken", "fish", "dal", "sambar", "paneer", "rajma", "chickpeas",
+  "milk", "curd", "apple", "banana", "orange", "mango", "grapes", "watermelon", "salad", "spinach",
+  "broccoli", "carrot", "tomato", "potato", "pizza", "burger", "fries", "samosa", "biscuit", "chocolate",
+  "coffee", "tea", "green tea", "juice", "soda", "water"
 ];
 
 let state = {
   condition: "general",
-  daily: { calories:0, protein:0, carbs:0, fats:0 },
+  daily: { calories: 0, protein: 0, carbs: 0, fats: 0 },
   entries: [],
   entryCount: 0
 };
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function setDateLabels() {
   const now = new Date();
-  const opts = { weekday:"long", month:"long", day:"numeric" };
+  const opts = { weekday: "long", month: "long", day: "numeric" };
   $("header-date").textContent = now.toLocaleDateString("en-IN", opts);
 }
 
@@ -77,7 +77,7 @@ function restoreCondition() {
 
 function initInputListeners() {
   $("btnBefore").addEventListener("click", () => submitFood("before"));
-  $("btnAfter").addEventListener("click",  () => submitFood("after"));
+  $("btnAfter").addEventListener("click", () => submitFood("after"));
   $("foodInput").addEventListener("input", handleAutocomplete);
   $("btnClearToday").addEventListener("click", clearToday);
 }
@@ -94,7 +94,7 @@ function handleAutocomplete() {
   list.classList.remove("hidden");
 }
 
-window.selectFood = function(val) {
+window.selectFood = function (val) {
   $("foodInput").value = val;
   $("autocompleteList").classList.add("hidden");
 };
@@ -136,7 +136,7 @@ function renderResult(data, mode) {
   $("resultPanel").classList.remove("hidden");
   $("resultFoodName").textContent = capitalize(data.food);
   $("resultModeBadge").textContent = mode === "before" ? "Pre-Analysis" : "Logged";
-  
+
   const score = rec.health_score ?? 0;
   $("scoreNum").textContent = score.toFixed(1);
   $("scoreNum").style.color = score >= 7 ? "#38b000" : score >= 4 ? "#ffb703" : "#e63946";
@@ -154,7 +154,7 @@ async function loadDailySummary() {
   state.daily = data.totals || {};
   state.entryCount = data.entry_count || 0;
   state.entries = data.entries || [];
-  
+
   $("calNum").textContent = Math.round(state.daily.calories || 0);
   $("calEntries").textContent = `${state.entryCount} item${state.entryCount !== 1 ? "s" : ""} logged`;
   updateDailyBars(state.daily);
@@ -163,14 +163,14 @@ async function loadDailySummary() {
 
 function updateDailyBars(totals) {
   const targets = CONDITION_TARGETS[state.condition] || CONDITION_TARGETS.general;
-  
+
   const calPct = Math.min((totals.calories / targets.calories) * 100, 100);
   $("calCircle").style.width = calPct + "%";
   if (calPct > 100) $("calCircle").style.background = "#e63946";
 
   updateBar("barProtein", "valProtein", totals.protein, targets.protein, "g");
-  updateBar("barCarbs",   "valCarbs",   totals.carbs,   targets.carbs,   "g");
-  updateBar("barFats",    "valFats",    totals.fats,    targets.fats,    "g");
+  updateBar("barCarbs", "valCarbs", totals.carbs, targets.carbs, "g");
+  updateBar("barFats", "valFats", totals.fats, targets.fats, "g");
 }
 
 function updateBar(barId, valId, value, max, unit) {
@@ -203,7 +203,7 @@ async function loadWeeklySummary() {
 function renderWeekBars(days) {
   const container = $("weekBars");
   const maxCal = Math.max(...days.map(d => d.totals.calories), 1000);
-  
+
   container.innerHTML = days.map(d => {
     const pct = (d.totals.calories / maxCal) * 100;
     const isToday = d.date === new Date().toISOString().split("T")[0];
@@ -214,7 +214,7 @@ function renderWeekBars(days) {
       </div>
     `;
   }).join("");
-  
+
   const tracked = days.filter(d => d.entry_count > 0).length;
   $("weekInsight").textContent = `${tracked}/7 days logged this week`;
 }
