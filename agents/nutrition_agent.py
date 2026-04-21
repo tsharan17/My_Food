@@ -1,8 +1,8 @@
 """
-Nutrition Agent
+AGENT 2: NUTRITION AGENT
+---------------------------------------------------------
 Maintains a compact, hand-curated nutrition database.
 Returns per-serving nutritional values for known foods.
-All values are per 1 standard serving/portion.
 """
 
 

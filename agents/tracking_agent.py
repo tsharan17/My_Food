@@ -1,5 +1,6 @@
 """
-Tracking Agent
+AGENT 5: TRACKING AGENT
+---------------------------------------------------------
 Maintains in-memory daily and weekly summaries.
 Computes streaks, weekly averages, and progress insights.
 """

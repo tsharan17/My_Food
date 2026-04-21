@@ -3,253 +3,156 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NutriGuard – Food & Health Smart Assistant</title>
-  <meta name="description" content="AI-powered food tracking and health assistant. Log meals, track nutrition, and get smart recommendations based on your health condition." />
+  <title>My Food – Smart Health Assistant</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/static/style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
 
-<!-- ════════════════════════════════════════════════
-     HEADER
-════════════════════════════════════════════════ -->
-<header class="app-header">
-  <div class="header-inner">
-    <div class="logo">
-      <span class="logo-icon">🥗</span>
-      <div>
-        <span class="logo-title">NutriGuard</span>
-        <span class="logo-sub">Food & Health Smart Assistant</span>
+  <nav class="navbar">
+    <a href="/" class="nav-brand">
+      <i class="fa-solid fa-heart-pulse"></i> My <span>Food</span>
+    </a>
+    <div class="nav-date" id="header-date">Today</div>
+  </nav>
+
+  <main class="container">
+    <div class="dashboard-grid">
+      
+      <!-- Left: Inputs & Logs -->
+      <div class="grid-left">
+        
+        <!-- Health Condition -->
+        <section class="card primary-border">
+          <h3><i class="fa-solid fa-user-doctor"></i> Health Focus</h3>
+          <p>Personalising goals for <strong id="active-condition-label">General Health</strong></p>
+          <div class="condition-grid">
+            <button class="cond-btn" id="cond-general" data-cond="general">General</button>
+            <button class="cond-btn" id="cond-weight_loss" data-cond="weight_loss">Weight Loss</button>
+            <button class="cond-btn" id="cond-diabetes" data-cond="diabetes">Diabetes</button>
+            <button class="cond-btn" id="cond-high_bp" data-cond="high_bp">High BP</button>
+          </div>
+        </section>
+
+        <!-- Input Section -->
+        <section class="card secondary-border">
+          <h3><i class="fa-solid fa-plate-wheat"></i> Log Meal</h3>
+          <div class="input-group">
+            <div>
+              <label class="field-label">What are you eating?</label>
+              <input type="text" id="foodInput" placeholder="e.g. 2 slices of bread" autocomplete="off" />
+              <div id="autocompleteList" class="autocomplete-items hidden"></div>
+            </div>
+            <div>
+              <label class="field-label">Portion Size</label>
+              <input type="number" id="portionInput" value="1" min="0.1" step="0.1" />
+            </div>
+          </div>
+          <div class="button-group">
+            <button id="btnBefore" class="btn btn-secondary">
+              <i class="fa-solid fa-magnifying-glass"></i> Pre-check
+            </button>
+            <button id="btnAfter" class="btn btn-primary">
+              <i class="fa-solid fa-plus"></i> Log Item
+            </button>
+          </div>
+        </section>
+
+        <!-- Food Log -->
+        <section class="card" id="logCard" style="display:none;">
+          <h3><i class="fa-solid fa-list-check"></i> Today's History</h3>
+          <div id="logList"></div>
+          <button id="btnClearToday" class="btn mt-2" style="background:#eee; font-size:0.8rem; width:100%;">Clear Today</button>
+        </section>
+      </div>
+
+      <!-- Right: Monitor & Results -->
+      <div class="grid-right">
+        
+        <!-- Result Panel -->
+        <section id="resultPanel" class="card primary-border hidden">
+          <div class="result-header">
+            <div class="score-circle-container">
+              <div class="score-circle" id="scoreNum">0</div>
+              <span class="score-label" id="scoreLabelText">Health Score</span>
+            </div>
+            <div>
+              <h4 id="resultFoodName">Food Name</h4>
+              <span id="resultModeBadge" class="result-badge">Analysis</span>
+            </div>
+          </div>
+          
+          <div id="resultContent">
+            <ul id="warningList" class="result-list"></ul>
+            <ul id="positiveList" class="result-list"></ul>
+            <div id="resultTips" class="mt-2">
+              <h5 style="color:var(--primary); font-size:0.9rem;"><i class="fa-solid fa-lightbulb"></i> Smart Recommendation</h5>
+              <ul id="tipList" class="result-list"></ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Monitor -->
+        <section class="card">
+          <div class="monitor-title">
+            <h3><i class="fa-solid fa-chart-simple"></i> Nutrition Monitor</h3>
+            <span id="calEntries" style="font-size:0.8rem; font-weight:600; color:#666;">0 items logged</span>
+          </div>
+          
+          <div class="nutrient-grid">
+            <div class="nutrient-item">
+              <div class="n-info">
+                <span>Calories</span>
+                <span><span id="calNum">0</span> / <span id="calTarget">2000</span> kcal</span>
+              </div>
+              <div class="progress-bg"><div id="calCircle" class="progress-bar"></div></div>
+            </div>
+
+            <div class="nutrient-item">
+              <div class="n-info">
+                <span>Protein</span>
+                <span id="valProtein">0g</span>
+              </div>
+              <div class="progress-bg"><div id="barProtein" class="progress-bar green"></div></div>
+            </div>
+
+            <div class="nutrient-item">
+              <div class="n-info">
+                <span>Carbs</span>
+                <span id="valCarbs">0g</span>
+              </div>
+              <div class="progress-bg"><div id="barCarbs" class="progress-bar yellow"></div></div>
+            </div>
+
+            <div class="nutrient-item">
+              <div class="n-info">
+                <span>Fats</span>
+                <span id="valFats">0g</span>
+              </div>
+              <div class="progress-bg"><div id="barFats" class="progress-bar"></div></div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Weekly Summary -->
+        <section class="card">
+          <h3><i class="fa-solid fa-calendar-week"></i> Weekly Insights</h3>
+          <div id="weekBars" style="display:flex; align-items:flex-end; gap:10px; height:100px; margin-top:1rem;">
+            <!-- Bars here -->
+          </div>
+          <p id="weekInsight" class="mt-2" style="font-size:0.8rem; font-weight:600; color:var(--dark);"></p>
+        </section>
+
       </div>
     </div>
-    <div class="header-date" id="headerDate"></div>
-  </div>
-</header>
+  </main>
 
-<!-- ════════════════════════════════════════════════
-     MAIN LAYOUT
-════════════════════════════════════════════════ -->
-<main class="app-main">
+  <footer class="text-center mt-2" style="padding-bottom:2rem; color:#888; font-size:0.8rem;">
+    My Food &bull; Smart Health Assistant &bull; 2024
+  </footer>
 
-  <!-- ── LEFT COLUMN ─────────────────────────── -->
-  <aside class="left-col">
-
-    <!-- Health Condition Panel -->
-    <section class="card condition-card">
-      <h2 class="card-title">⚕️ My Health Condition</h2>
-      <p class="card-hint">Select your goal — recommendations will adapt.</p>
-      <div class="condition-grid" id="conditionGrid">
-        <button class="cond-btn" data-cond="general"      id="cond-general">🌿 General Health</button>
-        <button class="cond-btn" data-cond="weight_loss"  id="cond-weight_loss">⚖️ Weight Loss</button>
-        <button class="cond-btn" data-cond="diabetes"     id="cond-diabetes">💉 Diabetes</button>
-        <button class="cond-btn" data-cond="high_bp"      id="cond-high_bp">❤️ High BP</button>
-      </div>
-      <div class="active-condition" id="activeConditionBadge">
-        <span class="badge badge-green" id="conditionBadgeText">🌿 General Health</span>
-      </div>
-    </section>
-
-    <!-- Daily Summary Card -->
-    <section class="card daily-card">
-      <div class="card-title-row">
-        <h2 class="card-title">📊 Today's Nutrition</h2>
-        <span class="date-label" id="todayLabel"></span>
-      </div>
-
-      <!-- Calories hero -->
-      <div class="cal-hero">
-        <div class="cal-circle" id="calCircle">
-          <span class="cal-num" id="calNum">0</span>
-          <span class="cal-unit">kcal</span>
-        </div>
-        <div class="cal-meta">
-          <div class="cal-target" id="calTarget">Target: 2200 kcal</div>
-          <div class="cal-entries" id="calEntries">0 items logged</div>
-        </div>
-      </div>
-
-      <!-- Nutrient bars -->
-      <div class="nutrient-bars">
-        <div class="nutrient-row">
-          <label>Protein</label>
-          <div class="bar-track"><div class="bar-fill bar-protein" id="barProtein"></div></div>
-          <span class="nutrient-val" id="valProtein">0g</span>
-        </div>
-        <div class="nutrient-row">
-          <label>Carbs</label>
-          <div class="bar-track"><div class="bar-fill bar-carbs" id="barCarbs"></div></div>
-          <span class="nutrient-val" id="valCarbs">0g</span>
-        </div>
-        <div class="nutrient-row">
-          <label>Fats</label>
-          <div class="bar-track"><div class="bar-fill bar-fats" id="barFats"></div></div>
-          <span class="nutrient-val" id="valFats">0g</span>
-        </div>
-        <div class="nutrient-row">
-          <label>Fiber</label>
-          <div class="bar-track"><div class="bar-fill bar-fiber" id="barFiber"></div></div>
-          <span class="nutrient-val" id="valFiber">0g</span>
-        </div>
-        <div class="nutrient-row">
-          <label>Sugar</label>
-          <div class="bar-track"><div class="bar-fill bar-sugar" id="barSugar"></div></div>
-          <span class="nutrient-val" id="valSugar">0g</span>
-        </div>
-      </div>
-
-      <!-- Daily health score -->
-      <div class="daily-score-row" id="dailyScoreRow" style="display:none;">
-        <span class="ds-label">Daily Health Score</span>
-        <div class="ds-badge" id="dailyScoreBadge">—</div>
-      </div>
-
-      <button class="btn-ghost btn-clear" id="btnClearToday">🗑 Clear Today's Log</button>
-    </section>
-
-    <!-- Weekly Summary -->
-    <section class="card weekly-card">
-      <h2 class="card-title">📅 This Week</h2>
-      <div class="week-bars" id="weekBars">
-        <div class="week-loading">Loading week data…</div>
-      </div>
-      <div class="week-insight" id="weekInsight"></div>
-    </section>
-
-  </aside>
-
-  <!-- ── CENTER COLUMN ──────────────────────── -->
-  <section class="center-col">
-
-    <!-- Food Input Card -->
-    <section class="card input-card">
-      <h2 class="card-title">🍽 What are you eating?</h2>
-
-      <div class="input-group">
-        <div class="food-input-wrap">
-          <span class="input-icon">🔍</span>
-          <input type="text" id="foodInput" class="food-input"
-            placeholder="e.g. 2 bowls of rice, 1 egg, banana…"
-            autocomplete="off" />
-          <div class="autocomplete-list" id="autocompleteList"></div>
-        </div>
-
-        <div class="portion-row">
-          <label for="portionInput">Portion ×</label>
-          <input type="number" id="portionInput" class="portion-input" value="1" min="0.25" max="10" step="0.25" />
-          <select id="mealType" class="meal-select">
-            <option value="breakfast">🌅 Breakfast</option>
-            <option value="lunch" selected>☀️ Lunch</option>
-            <option value="snack">🍎 Snack</option>
-            <option value="dinner">🌙 Dinner</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Two-action buttons -->
-      <div class="action-btns">
-        <button class="btn btn-before" id="btnBefore">
-          <span class="btn-icon">🤔</span>
-          <div>
-            <strong>I will eat this</strong>
-            <small>Analyse before eating</small>
-          </div>
-        </button>
-        <button class="btn btn-after" id="btnAfter">
-          <span class="btn-icon">✅</span>
-          <div>
-            <strong>I have eaten this</strong>
-            <small>Log & track now</small>
-          </div>
-        </button>
-      </div>
-
-      <!-- Spinner -->
-      <div class="spinner" id="spinner" style="display:none;">
-        <div class="spin-ring"></div><span>Analysing…</span>
-      </div>
-    </section>
-
-    <!-- Result Panel (populated by JS) -->
-    <div id="resultPanel" style="display:none;">
-
-      <!-- Warning banner -->
-      <div class="warning-banner" id="warningBanner" style="display:none;"></div>
-
-      <!-- Result card -->
-      <section class="card result-card">
-        <div class="result-header">
-          <div class="result-food-name" id="resultFoodName"></div>
-          <div class="result-mode-badge" id="resultModeBadge"></div>
-        </div>
-
-        <!-- Health score circle -->
-        <div class="score-section">
-          <div class="score-circle" id="scoreCircle">
-            <span class="score-num" id="scoreNum">—</span>
-            <span class="score-denom">/10</span>
-          </div>
-          <div class="score-meta">
-            <div class="score-label" id="scoreLabel"></div>
-            <div class="score-summary" id="scoreSummary"></div>
-          </div>
-        </div>
-
-        <!-- Nutrition chips -->
-        <div class="nutrition-chips" id="nutritionChips"></div>
-
-        <!-- Warnings -->
-        <div class="result-warnings" id="resultWarnings" style="display:none;">
-          <h3 class="section-heading">⚠️ Warnings</h3>
-          <ul class="flag-list" id="warningList"></ul>
-        </div>
-
-        <!-- Positives -->
-        <div class="result-positives" id="resultPositives" style="display:none;">
-          <h3 class="section-heading">💚 Why it's good</h3>
-          <ul class="flag-list flag-green" id="positiveList"></ul>
-        </div>
-
-        <!-- Suggestions -->
-        <div class="result-suggestions" id="resultSuggestions" style="display:none;">
-          <h3 class="section-heading">💡 Suggestions</h3>
-          <ul class="flag-list flag-yellow" id="suggestionList"></ul>
-        </div>
-
-        <!-- Alternatives -->
-        <div class="result-alternatives" id="resultAlternatives" style="display:none;">
-          <h3 class="section-heading">🔄 Healthier Alternatives</h3>
-          <ul class="flag-list flag-blue" id="alternativeList"></ul>
-        </div>
-
-        <!-- Tips -->
-        <div class="result-tips" id="resultTips" style="display:none;">
-          <h3 class="section-heading">📌 Health Tips</h3>
-          <ul class="flag-list flag-purple" id="tipList"></ul>
-        </div>
-      </section>
-    </div>
-
-    <!-- Today's food log -->
-    <section class="card log-card" id="logCard" style="display:none;">
-      <div class="card-title-row">
-        <h2 class="card-title">📋 Today's Food Log</h2>
-        <span class="log-count" id="logCount"></span>
-      </div>
-      <div class="log-list" id="logList"></div>
-    </section>
-
-  </section>
-
-</main>
-
-<!-- ════════════════════════════════════════════════
-     FOOTER
-════════════════════════════════════════════════ -->
-<footer class="app-footer">
-  <p>NutriGuard · Food & Health Smart Assistant · Built with ❤️ using AI Agents in Google Antigravity IDE</p>
-</footer>
-
-<script src="/static/app.js"></script>
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>

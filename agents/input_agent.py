@@ -1,5 +1,6 @@
 """
-Input Agent
+AGENT 1: INPUT AGENT
+---------------------------------------------------------
 Responsible for parsing and normalizing user food input.
 Handles aliases, spelling corrections, and portion normalization.
 """
@@ -83,7 +84,8 @@ FOOD_ALIASES = {
 class InputAgent:
     """
     Agent 1: Input Agent
-    Parses raw user input into a structured food entry.
+    Primary interface for transforming natural language food mentions
+    into canonical keys used by the Nutrition Agent.
     """
 
     def parse(self, raw_food: str, portion: float = 1.0) -> dict:

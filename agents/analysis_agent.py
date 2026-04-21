@@ -1,5 +1,6 @@
 """
-Analysis Agent
+AGENT 3: ANALYSIS AGENT
+---------------------------------------------------------
 Evaluates nutritional values against daily targets and health conditions.
 Produces severity levels, flags, and a daily health score.
 """

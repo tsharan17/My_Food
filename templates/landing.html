@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Food – Smart Health Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body style="background: white;">
+  <main class="hero">
+    <h1>My <span>Food</span></h1>
+    <p>Track your nutrition, hit your goals, and live with more energy.</p>
+    <a href="/dashboard" class="cta-btn">Start Tracking →</a>
+    
+    <div style="margin-top: 4rem; display: flex; justify-content: center; gap: 30px; opacity: 0.8;">
+      <div style="text-align: center;">
+        <h3 style="color: var(--primary);">60+</h3>
+        <span style="font-size: 0.8rem; font-weight: 700;">Common Foods</span>
+      </div>
+      <div style="text-align: center;">
+        <h3 style="color: var(--secondary);">AI</h3>
+        <span style="font-size: 0.8rem; font-weight: 700;">Smart Agents</span>
+      </div>
+      <div style="text-align: center;">
+        <h3 style="color: var(--dark);">7-Day</h3>
+        <span style="font-size: 0.8rem; font-weight: 700;">Health Tracking</span>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
