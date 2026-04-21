@@ -1,4 +1,4 @@
-# 🥗 NutriGuard – Food & Health Smart Assistant
+# 🥗 My Food – Food & Health Smart Assistant
 
 **Vertical:** Food & Health  
 **Built with:** AI Agents in Google Antigravity IDE  
@@ -14,7 +14,7 @@ Millions of people make poor daily food choices due to lack of instant, personal
 
 ## 💡 Solution Approach
 
-NutriGuard is a lightweight, agent-based smart assistant that:
+My Food is a lightweight, agent-based smart assistant that:
 - Accepts natural food input ("2 bowls of rice", "1 banana")
 - Analyses nutritional content using a compact built-in database
 - Adapts all recommendations to the user's selected health condition
@@ -162,7 +162,7 @@ gcloud services enable cloudbuild.googleapis.com
 cd My_Food
 
 # Step 5: Build and deploy in one command
-gcloud run deploy nutriguard \
+gcloud run deploy My Food \
   --source . \
   --region asia-south1 \
   --platform managed \
